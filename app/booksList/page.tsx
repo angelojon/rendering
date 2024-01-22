@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 export const booksList = [
   {
     id: 1,
@@ -28,8 +29,7 @@ export const booksList = [
 ]
 
 export async function getBooks() {
-  console.log('Fetching books...');
-  // Simulating an API call by returning the books data
+  
   return {
     props: {
       books: booksList,
@@ -37,12 +37,13 @@ export async function getBooks() {
   };
 }
 
-export default async function TodoList({ todos }: any) {
+export default async function BooksList({ books }: any) {
+  
   const { props: { books: data } } = await getBooks();
 
   return (
     <div>
-      {data?.length === 0 ? (
+      {books?.length === 0 ? (
         <div>Loading...</div>
       ) : (
         data?.map((books: any) => (
