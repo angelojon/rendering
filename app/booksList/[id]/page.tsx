@@ -1,58 +1,36 @@
-'use client';
+import { getBooks } from "../page"
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+export const revalidate = 30
 
-export const booksList = [
-  {
-    id: 1,
-    title: "Things fall apart",
-    pages: 209,
-    language: "English"
-  },
-  {
-    id: 2,
-    title: "Fairy tails",
-    pages: 784,
-    language: "Danish"
-  },
-  {
-    id: 3,
-    title: "The book of Job",
-    pages: 176,
-    language: "Hebrew"
-  },
-  {
-    id: 4,
-    title: "Pride and Prejudice",
-    pages: 443,
-    language: "French"
-  }
-]
+export default async function BookId({ 
+    params,
+}: { 
+    params: { id : string } 
+}) {
+    const bookId = params.id;
+    const booksData = await getBooks();
+    const books = booksData.props.books;
+    const selectedBook = books.find((book:any) => String(book.id) === bookId);
 
-export async function getBookId({ params }: any) {
-  const bookId = parseInt(params.id);
-  const book = booksList.find((b) => b.id === bookId);
 
-  return {
-    props: {
-      book,
-    },
-  };
-}
+    return (
+        <div>
+          {selectedBook ? (
+            <div>
+              <h1>{selectedBook.title}</h1>
+              <p>Pages: {selectedBook.pages}</p>
+              <p>Language: {selectedBook.language}</p>
+            </div>
+          ) : (
+            <div>Loading...</div>
+          )}
 
-export default function BookDetails({ book }: any) {
-  const router = useRouter();
+        <a href="/booksList"> back to list </a>
 
-  if (!book) {
-    return <div>Book not found</div>;
-  }
+        </div>
+        
+        
+      );
+    }
 
-  return (
-    <div>
-      <p>{book.id}: {book.title}</p>
-      <p>Pages: {book.pages}</p>
-      <p>Language: {book.language}</p>
-    </div>
-  );
-}
+
